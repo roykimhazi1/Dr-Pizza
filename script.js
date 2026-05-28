@@ -1,0 +1,237 @@
+'use strict';
+
+// === PIZZA DATA ===
+const pizzas = [
+  {
+    id: 1, name: "Margherita Classic", category: "classic",
+    emoji: "🍕", price: 12.99,
+    desc: "San Marzano tomato, fresh mozzarella, basil. A timeless cure.",
+    tagLabel: "Best Seller", tagColor: "#FF3B30",
+    accentColor: "#FF9500",
+  },
+  {
+    id: 2, name: "BBQ Bacon Blitz", category: "classic",
+    emoji: "🥓", price: 16.99,
+    desc: "Smoky BBQ base, crispy bacon, caramelized onions, cheddar.",
+    tagLabel: "Fan Fave", tagColor: "#AF52DE",
+    accentColor: "#AF52DE",
+  },
+  {
+    id: 3, name: "Spicy Inferno", category: "special",
+    emoji: "🌶️", price: 15.99,
+    desc: "Ghost pepper sauce, jalapeños, habanero salsa, fiery chorizo.",
+    tagLabel: "Hot 🔥", tagColor: "#FF3B30",
+    accentColor: "#FF3B30",
+  },
+  {
+    id: 4, name: "Garden Bloom", category: "veg",
+    emoji: "🥦", price: 13.99,
+    desc: "Pesto base, roasted veggies, goat cheese, sun-dried tomatoes.",
+    tagLabel: "Veggie", tagColor: "#34C759",
+    accentColor: "#34C759",
+  },
+  {
+    id: 5, name: "The Dr's Special", category: "special",
+    emoji: "🩺", price: 19.99,
+    desc: "Truffle oil, prosciutto, arugula, shaved parmesan, fig jam.",
+    tagLabel: "Signature", tagColor: "#007AFF",
+    accentColor: "#007AFF",
+  },
+  {
+    id: 6, name: "Mushroom Mystique", category: "veg",
+    emoji: "🍄", price: 14.49,
+    desc: "Wild mushroom medley, truffle cream, thyme, gruyère cheese.",
+    tagLabel: "Earthy", tagColor: "#8E5E3C",
+    accentColor: "#8E5E3C",
+  },
+  {
+    id: 7, name: "Pepperoni Overdose", category: "classic",
+    emoji: "🔴", price: 14.99,
+    desc: "Double-layer pepperoni, mozzarella volcano, oregano oil.",
+    tagLabel: "Loaded", tagColor: "#FF2D55",
+    accentColor: "#FF2D55",
+  },
+  {
+    id: 8, name: "Hawaiian Sunrise", category: "special",
+    emoji: "🍍", price: 13.49,
+    desc: "Ham, pineapple, bell peppers, honey drizzle. Controversial. Perfect.",
+    tagLabel: "Polarizing", tagColor: "#FFCC00",
+    accentColor: "#FF9500",
+  },
+];
+
+// === CART STATE ===
+let cart = [];
+
+// === RENDER MENU ===
+function renderMenu(filter = 'all') {
+  const grid = document.getElementById('menuGrid');
+  const items = filter === 'all' ? pizzas : pizzas.filter(p => p.category === filter);
+
+  grid.innerHTML = items.map(p => `
+    <div class="pizza-card" data-id="${p.id}">
+      <div class="card-emoji">
+        ${p.emoji}
+        <span class="card-tag" style="background:${p.tagColor}">${p.tagLabel}</span>
+      </div>
+      <div class="card-body">
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+        <div class="card-footer">
+          <span class="price" style="color:${p.accentColor}">$${p.price.toFixed(2)}</span>
+          <button class="add-btn" style="background:linear-gradient(135deg,${p.accentColor},${p.tagColor})" onclick="addToCart(${p.id})">+</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // animate cards in
+  const cards = grid.querySelectorAll('.pizza-card');
+  cards.forEach((card, i) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(24px)';
+    setTimeout(() => {
+      card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, i * 60);
+  });
+}
+
+// === CART FUNCTIONS ===
+function addToCart(id) {
+  const pizza = pizzas.find(p => p.id === id);
+  const existing = cart.find(item => item.id === id);
+
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ ...pizza, qty: 1 });
+  }
+
+  updateCartUI();
+  animateCartBtn();
+  openCart();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(item => item.id !== id);
+  updateCartUI();
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) removeFromCart(id);
+  else updateCartUI();
+}
+
+function updateCartUI() {
+  const count    = cart.reduce((s, i) => s + i.qty, 0);
+  const total    = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const countEl  = document.getElementById('cartCount');
+  const itemsEl  = document.getElementById('cartItems');
+  const totalEl  = document.getElementById('cartTotal');
+  const footerEl = document.getElementById('cartFooter');
+
+  countEl.textContent = count;
+
+  if (cart.length === 0) {
+    itemsEl.innerHTML = `
+      <div class="cart-empty">
+        <div class="empty-icon">🍕</div>
+        <p>Your cart is empty!</p>
+        <p>Add some pizzas to get started.</p>
+      </div>`;
+    footerEl.style.display = 'none';
+  } else {
+    itemsEl.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <span class="ci-emoji">${item.emoji}</span>
+        <div class="ci-info">
+          <strong>${item.name}</strong>
+          <span>$${(item.price * item.qty).toFixed(2)}</span>
+        </div>
+        <div class="ci-controls">
+          <button class="ci-btn" onclick="changeQty(${item.id}, -1)">−</button>
+          <span class="ci-qty">${item.qty}</span>
+          <button class="ci-btn" onclick="changeQty(${item.id}, 1)">+</button>
+        </div>
+      </div>
+    `).join('');
+    footerEl.style.display = 'block';
+    totalEl.textContent = `$${total.toFixed(2)}`;
+  }
+}
+
+function animateCartBtn() {
+  const btn = document.getElementById('cartBtn');
+  btn.style.transform = 'scale(1.2)';
+  setTimeout(() => { btn.style.transform = ''; }, 200);
+}
+
+// === CART OPEN/CLOSE ===
+function openCart() {
+  document.getElementById('cartSidebar').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cartSidebar').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+}
+
+// === ORDER ===
+function placeOrder() {
+  closeCart();
+  cart = [];
+  updateCartUI();
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+// === FILTER TABS ===
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderMenu(tab.dataset.filter);
+  });
+});
+
+// === EVENT LISTENERS ===
+document.getElementById('cartBtn').addEventListener('click', openCart);
+document.getElementById('closeCart').addEventListener('click', closeCart);
+document.getElementById('cartOverlay').addEventListener('click', closeCart);
+document.getElementById('checkoutBtn').addEventListener('click', placeOrder);
+document.getElementById('closeModal').addEventListener('click', () => {
+  document.getElementById('modalOverlay').classList.remove('open');
+});
+
+// === INIT ===
+renderMenu();
+
+// === NAVBAR SCROLL EFFECT ===
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('.navbar');
+  nav.style.boxShadow = window.scrollY > 20
+    ? '0 4px 20px rgba(0,0,0,0.12)'
+    : 'none';
+});
+
+// === INTERSECTION OBSERVER for step/testimonial cards ===
+const observerOpts = { threshold: 0.15 };
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, observerOpts);
+
+document.querySelectorAll('.step, .testimonial-card, .stat').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
+});
