@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dr. Pizza 🍕 — Prescription: Delicious</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="logo">🍕 Dr. Pizza</div>
+    <div class="nav-links">
+      <a href="#menu">Menu</a>
+      <a href="#how">How It Works</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button class="cart-btn" id="cartBtn">
+      🛒 Cart <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-blob blob1"></div>
+    <div class="hero-blob blob2"></div>
+    <div class="hero-blob blob3"></div>
+    <div class="hero-content">
+      <div class="badge">🔥 Hot &amp; Fresh</div>
+      <h1>The Doctor Is<br /><span class="highlight">IN THE KITCHEN</span></h1>
+      <p class="hero-sub">Ridiculously good pizza, delivered to your door.<br />No waiting room required.</p>
+      <div class="hero-actions">
+        <a href="#menu" class="btn btn-primary">Order Now</a>
+        <a href="#how" class="btn btn-outline">How It Works</a>
+      </div>
+    </div>
+    <div class="hero-pizza">
+      <div class="pizza-spin">🍕</div>
+      <div class="floating-topping t1">🧀</div>
+      <div class="floating-topping t2">🌶️</div>
+      <div class="floating-topping t3">🍄</div>
+      <div class="floating-topping t4">🫑</div>
+      <div class="floating-topping t5">🥓</div>
+    </div>
+  </section>
+
+  <!-- STATS BANNER -->
+  <div class="stats-banner">
+    <div class="stat"><span>🍕</span><strong>50+</strong><em>Pizza Varieties</em></div>
+    <div class="stat"><span>⚡</span><strong>30 min</strong><em>Average Delivery</em></div>
+    <div class="stat"><span>⭐</span><strong>4.9/5</strong><em>Customer Rating</em></div>
+    <div class="stat"><span>🥰</span><strong>200k+</strong><em>Happy Patients</em></div>
+  </div>
+
+  <!-- MENU -->
+  <section class="menu-section" id="menu">
+    <div class="section-header">
+      <h2>Our <span class="highlight">Prescription</span> Menu</h2>
+      <p>Each pizza is carefully diagnosed and crafted for maximum deliciousness.</p>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="tab active" data-filter="all">All</button>
+      <button class="tab" data-filter="classic">Classic</button>
+      <button class="tab" data-filter="special">Special</button>
+      <button class="tab" data-filter="veg">Veggie</button>
+    </div>
+
+    <div class="menu-grid" id="menuGrid"></div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section" id="how">
+    <div class="section-header">
+      <h2>How It <span class="highlight">Works</span></h2>
+      <p>Ordering pizza has never been this easy (or this fun).</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon" style="background:#FFE0E0;">📋</div>
+        <h3>1. Pick Your Pie</h3>
+        <p>Browse our delicious menu and add your favorites to the cart.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-icon" style="background:#E0F5FF;">✍️</div>
+        <h3>2. Customize It</h3>
+        <p>Choose your size, crust, and extra toppings to perfection.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-icon" style="background:#E8FFE0;">🚀</div>
+        <h3>3. We Deliver</h3>
+        <p>Hot, fresh pizza at your door in 30 minutes or less. Guaranteed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="section-header">
+      <h2>What Our <span class="highlight">Patients</span> Say</h2>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <p>"Dr. Pizza cured my hunger AND my sadness. 10/10 would prescribe to everyone."</p>
+        <div class="reviewer"><span>😊</span><strong>Sarah K.</strong></div>
+      </div>
+      <div class="testimonial-card">
+        <p>"The BBQ Bacon Blitz should be classified as a controlled substance. It's that good."</p>
+        <div class="reviewer"><span>🤤</span><strong>Marcus T.</strong></div>
+      </div>
+      <div class="testimonial-card">
+        <p>"Arrived in 25 minutes, still sizzling. My new emergency contact is Dr. Pizza."</p>
+        <div class="reviewer"><span>🔥</span><strong>Priya M.</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="logo">🍕 Dr. Pizza</div>
+        <p>Prescription: Delicious.<br />Open daily 11am – 11pm</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a href="#menu">Menu</a>
+        <a href="#how">How It Works</a>
+        <a href="#">Catering</a>
+        <a href="#">Franchise</a>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <p>📞 1-800-DR-PIZZA</p>
+        <p>📧 orders@drpizza.com</p>
+        <p>📍 123 Slice Street, Pizzaville</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Dr. Pizza. All slices reserved. 🍕</p>
+    </div>
+  </footer>
+
+  <!-- CART SIDEBAR -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3>🛒 Your Order</h3>
+      <button class="close-cart" id="closeCart">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <div class="empty-icon">🍕</div>
+        <p>Your cart is empty!</p>
+        <p>Add some pizzas to get started.</p>
+      </div>
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display:none">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cartTotal">$0.00</strong>
+      </div>
+      <button class="btn btn-primary full-width" id="checkoutBtn">Place Order 🍕</button>
+    </div>
+  </aside>
+
+  <!-- ORDER SUCCESS MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-pizza">🍕</div>
+      <h2>Order Placed!</h2>
+      <p>Your pizza is in the oven. ETA: <strong>28 minutes</strong>.</p>
+      <p class="modal-sub">The doctor will see you shortly.</p>
+      <button class="btn btn-primary" id="closeModal">Awesome!</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
