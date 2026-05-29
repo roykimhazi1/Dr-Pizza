@@ -3,59 +3,59 @@
 // === PIZZA DATA ===
 const pizzas = [
   {
-    id: 1, name: "Margherita Classic", category: "classic",
-    emoji: "🍕", price: 12.99,
-    desc: "San Marzano tomato, fresh mozzarella, basil. A timeless cure.",
-    tagLabel: "Best Seller", tagColor: "#FF3B30",
+    id: 1, name: "מגש פיצה L", category: "pizza",
+    emoji: "🍕", price: 65,
+    desc: "6 משולשים במגש.",
+    tagLabel: "קלאסי", tagColor: "#FF3B30",
     accentColor: "#FF9500",
   },
   {
-    id: 2, name: "BBQ Bacon Blitz", category: "classic",
-    emoji: "🥓", price: 16.99,
-    desc: "Smoky BBQ base, crispy bacon, caramelized onions, cheddar.",
-    tagLabel: "Fan Fave", tagColor: "#AF52DE",
+    id: 2, name: "מגש פיצה XL", category: "pizza",
+    emoji: "🍕", price: 70,
+    desc: "8 משולשים במגש.",
+    tagLabel: "משפחתי", tagColor: "#AF52DE",
     accentColor: "#AF52DE",
   },
   {
-    id: 3, name: "Spicy Inferno", category: "special",
-    emoji: "🌶️", price: 15.99,
-    desc: "Ghost pepper sauce, jalapeños, habanero salsa, fiery chorizo.",
-    tagLabel: "Hot 🔥", tagColor: "#FF3B30",
+    id: 3, name: "מבצע XL פיצה 1+1", category: "pizza",
+    emoji: "🍕", price: 130,
+    desc: "שני מגשי פיצה XL, בכל מגש 8 משולשים.",
+    tagLabel: "מבצע", tagColor: "#FF3B30",
     accentColor: "#FF3B30",
   },
   {
-    id: 4, name: "Garden Bloom", category: "veg",
-    emoji: "🥦", price: 13.99,
-    desc: "Pesto base, roasted veggies, goat cheese, sun-dried tomatoes.",
-    tagLabel: "Veggie", tagColor: "#34C759",
+    id: 4, name: "פוקאצ'ה שום", category: "special",
+    emoji: "🫓", price: 20,
+    desc: "מאפה חם ופריך ליד הפיצה או כנשנוש בפני עצמו.",
+    tagLabel: "מאפה", tagColor: "#34C759",
     accentColor: "#34C759",
   },
   {
-    id: 5, name: "The Dr's Special", category: "special",
-    emoji: "🩺", price: 19.99,
-    desc: "Truffle oil, prosciutto, arugula, shaved parmesan, fig jam.",
-    tagLabel: "Signature", tagColor: "#007AFF",
+    id: 5, name: "זיווה עם רסק וביצה", category: "special",
+    emoji: "🧀", price: 30,
+    desc: "מאפה גבינות קלאסי שמגיע עם רסק וביצה.",
+    tagLabel: "מיוחד", tagColor: "#007AFF",
     accentColor: "#007AFF",
   },
   {
-    id: 6, name: "Mushroom Mystique", category: "veg",
-    emoji: "🍄", price: 14.49,
-    desc: "Wild mushroom medley, truffle cream, thyme, gruyère cheese.",
-    tagLabel: "Earthy", tagColor: "#8E5E3C",
+    id: 6, name: "מלבי", category: "dessert",
+    emoji: "🍮", price: 12,
+    desc: "גביע אישי של פודינג עם מי ורדים ואגוזים.",
+    tagLabel: "קינוח", tagColor: "#8E5E3C",
     accentColor: "#8E5E3C",
   },
   {
-    id: 7, name: "Pepperoni Overdose", category: "classic",
-    emoji: "🔴", price: 14.99,
-    desc: "Double-layer pepperoni, mozzarella volcano, oregano oil.",
-    tagLabel: "Loaded", tagColor: "#FF2D55",
+    id: 7, name: "מוס שוקולד", category: "dessert",
+    emoji: "🍫", price: 12,
+    desc: "גביע אישי של מוס שוקולד חלבי עם פירורי שוקולד.",
+    tagLabel: "מתוק", tagColor: "#FF2D55",
     accentColor: "#FF2D55",
   },
   {
-    id: 8, name: "Hawaiian Sunrise", category: "special",
-    emoji: "🍍", price: 13.49,
-    desc: "Ham, pineapple, bell peppers, honey drizzle. Controversial. Perfect.",
-    tagLabel: "Polarizing", tagColor: "#FFCC00",
+    id: 8, name: "שתייה 1.5 ליטר", category: "drink",
+    emoji: "🥤", price: 10,
+    desc: "בקבוק גדול לבחירה לצד המגש.",
+    tagLabel: "שתייה", tagColor: "#FFCC00",
     accentColor: "#FF9500",
   },
 ];
@@ -78,7 +78,7 @@ function renderMenu(filter = 'all') {
         <h3>${p.name}</h3>
         <p>${p.desc}</p>
         <div class="card-footer">
-          <span class="price" style="color:${p.accentColor}">$${p.price.toFixed(2)}</span>
+          <span class="price" style="color:${p.accentColor}">₪${p.price.toFixed(0)}</span>
           <button class="add-btn" style="background:linear-gradient(135deg,${p.accentColor},${p.tagColor})" onclick="addToCart(${p.id})">+</button>
         </div>
       </div>
@@ -141,8 +141,8 @@ function updateCartUI() {
     itemsEl.innerHTML = `
       <div class="cart-empty">
         <div class="empty-icon">🍕</div>
-        <p>Your cart is empty!</p>
-        <p>Add some pizzas to get started.</p>
+        <p>הסל ריק כרגע</p>
+        <p>הוסיפו פריטים מהתפריט כדי להתחיל.</p>
       </div>`;
     footerEl.style.display = 'none';
   } else {
@@ -151,7 +151,7 @@ function updateCartUI() {
         <span class="ci-emoji">${item.emoji}</span>
         <div class="ci-info">
           <strong>${item.name}</strong>
-          <span>$${(item.price * item.qty).toFixed(2)}</span>
+          <span>₪${(item.price * item.qty).toFixed(0)}</span>
         </div>
         <div class="ci-controls">
           <button class="ci-btn" onclick="changeQty(${item.id}, -1)">−</button>
@@ -161,7 +161,7 @@ function updateCartUI() {
       </div>
     `).join('');
     footerEl.style.display = 'block';
-    totalEl.textContent = `$${total.toFixed(2)}`;
+    totalEl.textContent = `₪${total.toFixed(0)}`;
   }
 }
 
