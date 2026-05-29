@@ -1,64 +1,57 @@
 'use strict';
 
-// === PIZZA DATA ===
-const pizzas = [
-  {
-    id: 1, name: "מגש פיצה L", category: "pizza",
-    emoji: "🍕", price: 65,
-    desc: "6 משולשים במגש.",
-    tagLabel: "קלאסי", tagColor: "#FF3B30",
-    accentColor: "#FF9500",
-  },
-  {
-    id: 2, name: "מגש פיצה XL", category: "pizza",
-    emoji: "🍕", price: 70,
-    desc: "8 משולשים במגש.",
-    tagLabel: "משפחתי", tagColor: "#AF52DE",
-    accentColor: "#AF52DE",
-  },
-  {
-    id: 3, name: "מבצע XL פיצה 1+1", category: "pizza",
-    emoji: "🍕", price: 130,
-    desc: "שני מגשי פיצה XL, בכל מגש 8 משולשים.",
-    tagLabel: "מבצע", tagColor: "#FF3B30",
-    accentColor: "#FF3B30",
-  },
-  {
-    id: 4, name: "פוקאצ'ה שום", category: "special",
-    emoji: "🫓", price: 20,
-    desc: "מאפה חם ופריך ליד הפיצה או כנשנוש בפני עצמו.",
-    tagLabel: "מאפה", tagColor: "#34C759",
-    accentColor: "#34C759",
-  },
-  {
-    id: 5, name: "זיווה עם רסק וביצה", category: "special",
-    emoji: "🧀", price: 30,
-    desc: "מאפה גבינות קלאסי שמגיע עם רסק וביצה.",
-    tagLabel: "מיוחד", tagColor: "#007AFF",
-    accentColor: "#007AFF",
-  },
-  {
-    id: 6, name: "מלבי", category: "dessert",
-    emoji: "🍮", price: 12,
-    desc: "גביע אישי של פודינג עם מי ורדים ואגוזים.",
-    tagLabel: "קינוח", tagColor: "#8E5E3C",
-    accentColor: "#8E5E3C",
-  },
-  {
-    id: 7, name: "מוס שוקולד", category: "dessert",
-    emoji: "🍫", price: 12,
-    desc: "גביע אישי של מוס שוקולד חלבי עם פירורי שוקולד.",
-    tagLabel: "מתוק", tagColor: "#FF2D55",
-    accentColor: "#FF2D55",
-  },
-  {
-    id: 8, name: "שתייה 1.5 ליטר", category: "drink",
-    emoji: "🥤", price: 10,
-    desc: "בקבוק גדול לבחירה לצד המגש.",
-    tagLabel: "שתייה", tagColor: "#FFCC00",
-    accentColor: "#FF9500",
-  },
-];
+// === MENU DATA (loaded from JSON) ===
+let pizzas = [];
+
+const CATEGORY_CONFIG = {
+  'דוקטור פיצה': { filter: 'pizza',   tagColor: '#FF3B30', accentColor: '#FF9500', emoji: '🍕' },
+  'מיוחדים':     { filter: 'special',  tagColor: '#34C759', accentColor: '#34C759', emoji: '🫓' },
+  'קינוחים':     { filter: 'dessert',  tagColor: '#FF9500', accentColor: '#8E5E3C', emoji: '🍮' },
+  'שתייה':       { filter: 'drink',    tagColor: '#FFCC00', accentColor: '#007AFF', emoji: '🥤' },
+};
+
+function resolveEmoji(name, categoryEmoji) {
+  if (name.includes('שוקולד'))                             return '🍫';
+  if (name.includes('מלבי') || name.includes('בוואריה') || name.includes('קדאיף')) return '🍮';
+  if (name.includes('זיווה') || name.includes('גבינ'))     return '🧀';
+  if (name.includes('מלאווח') || name.includes('פוקאצ'))   return '🫓';
+  if (name.includes('מנרלים') || name.includes('מים'))     return '💧';
+  if (name.includes('בירה'))                               return '🍺';
+  return categoryEmoji;
+}
+
+function resolveTag(name, categoryFilter) {
+  if (categoryFilter !== 'pizza') {
+    const labels = { special: 'מיוחד', dessert: 'קינוח', drink: 'שתייה' };
+    return labels[categoryFilter];
+  }
+  if (name.includes('מבצע') || name.includes('1+1')) return 'מבצע';
+  if (name.includes('משפחתי'))                       return 'משפחתי';
+  return 'קלאסי';
+}
+
+async function loadMenuData() {
+  const response = await fetch('menu_data/menu_items.json');
+  const data = await response.json();
+
+  let id = 0;
+  pizzas = data.menu.flatMap(category => {
+    const config = CATEGORY_CONFIG[category.category] || CATEGORY_CONFIG['שתייה'];
+    return category.items.map(item => ({
+      id:          ++id,
+      name:        item.item_name,
+      category:    config.filter,
+      emoji:       resolveEmoji(item.item_name, config.emoji),
+      price:       item.item_price,
+      desc:        item.item_description || '',
+      tagLabel:    resolveTag(item.item_name, config.filter),
+      tagColor:    config.tagColor,
+      accentColor: config.accentColor,
+    }));
+  });
+
+  renderMenu();
+}
 
 // === CART STATE ===
 let cart = [];
@@ -208,7 +201,7 @@ document.getElementById('closeModal').addEventListener('click', () => {
 });
 
 // === INIT ===
-renderMenu();
+loadMenuData();
 
 // === NAVBAR SCROLL EFFECT ===
 window.addEventListener('scroll', () => {

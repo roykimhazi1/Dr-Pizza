@@ -1,0 +1,164 @@
+{
+  "restaurant": {
+    "name": "ד\"ר פיצה ראשל\"צ",
+    "source": "https://www.mishloha.co.il/r/%D7%93%22%D7%A8%20%D7%A4%D7%99%D7%A6%D7%94%20%D7%A8%D7%90%D7%A9%D7%9C%22%D7%A6#!/rest/1426/menu",
+    "currency": "ILS"
+  },
+  "menu": [
+    {
+      "category": "דוקטור פיצה",
+      "items": [
+        {
+          "item_name": "מגש משפחתי XL + תוספת + שתיה 1.5 ל'",
+          "item_description": "8 משולשים",
+          "item_price": 85
+        },
+        {
+          "item_name": "מבצע L פיצה 1+1",
+          "item_description": "שני מגשי פיצה L (בכל מגש 6 משולשים)",
+          "item_price": 120
+        },
+        {
+          "item_name": "מבצע XL פיצה 1+1",
+          "item_description": "שני מגשי פיצה XL (בכל מגש 8 משולשים)",
+          "item_price": 130
+        },
+        {
+          "item_name": "מגש פיצה L",
+          "item_description": "6 משולשים במגש",
+          "item_price": 65
+        },
+        {
+          "item_name": "מגש פיצה XL",
+          "item_description": "8 משולשים במגש",
+          "item_price": 70
+        }
+      ]
+    },
+    {
+      "category": "מיוחדים",
+      "items": [
+        {
+          "item_name": "מלאווח פיצה",
+          "item_description": "",
+          "item_price": 30
+        },
+        {
+          "item_name": "פוקאצ'ה שום",
+          "item_description": "",
+          "item_price": 20
+        },
+        {
+          "item_name": "מלאווח עם רסק וביצה",
+          "item_description": "",
+          "item_price": 30
+        },
+        {
+          "item_name": "זיווה עם רסק וביצה",
+          "item_description": "",
+          "item_price": 30
+        }
+      ]
+    },
+    {
+      "category": "קינוחים",
+      "items": [
+        {
+          "item_name": "מלבי",
+          "item_description": "גביע אישי של פודינג עם מי ורדים ואגוזים",
+          "item_price": 12
+        },
+        {
+          "item_name": "בוואריה",
+          "item_description": "גביע אישי של קרם וניל חלבי",
+          "item_price": 12
+        },
+        {
+          "item_name": "מוס שוקולד",
+          "item_description": "גביע אישי של מוס שוקולד חלבי עם פירורי שוקולד",
+          "item_price": 12
+        },
+        {
+          "item_name": "קדאיף",
+          "item_description": "גביע אישי של קרם וניל מעל שערות קדאיף",
+          "item_price": 12
+        }
+      ]
+    },
+    {
+      "category": "שתייה",
+      "items": [
+        {
+          "item_name": "בקבוק 1.5 ליטר קוקה קולה",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר דיאט קולה",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר קולה זירו",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר ספרייט",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר דיאט ספרייט",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר פאנטה אורנג'",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר נסתי אפרסק",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר מים בטעמים",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר ענבים",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר תפוזים",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר מנגו",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר תפוחים",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר בירה מאלט שחורה",
+          "item_description": "",
+          "item_price": 10
+        },
+        {
+          "item_name": "בקבוק 1.5 ליטר מנרלים",
+          "item_description": "",
+          "item_price": 8
+        }
+      ]
+    }
+  ]
+}
