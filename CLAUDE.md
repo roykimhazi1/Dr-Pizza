@@ -4,10 +4,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Dr. Pizza** (ד"ר פיצה) is a React + TypeScript ordering website for a kosher pizzeria in Raanana, Israel. It is a demo/mockup — no backend or real checkout exists; the order flow ends by prompting the customer to call the restaurant.
+**Dr. Pizza** (ד"ר פיצה) is a React + TypeScript ordering website for a kosher pizzeria in Raanana, Israel. It is built for a real restaurant but is **not yet live**. The current build is a frontend-only demo — the order flow ends with a "call us" modal. A real backend, checkout, and admin panel are planned.
 
 - **GitHub:** https://github.com/roykimhazi1/Dr-Pizza
 - **Primary branch:** `main`
+
+---
+
+## Project Status & Roadmap
+
+**Current state:** Frontend-only demo. No backend. No deployment.
+
+**Planned features (in priority order):**
+1. **Cart persistence** — save cart to `localStorage` so it survives page refresh
+2. **Real backend / checkout** — actual order submission (stack TBD; no framework locked in yet)
+3. **Admin / CMS panel** — edit menu data without touching JSON files directly
+4. **Additional pages/sections** — e.g. Gallery, Promotions, About, Loyalty program
+
+**Deployment:** Not yet live. Will need a deployment pipeline — Vercel or Netlify are natural fits for a CRA-based project.
 
 ---
 
@@ -42,7 +56,7 @@ Dr-Pizza/
 │   ├── setupTests.ts         # Jest / jest-dom setup
 │   ├── reportWebVitals.ts    # CRA performance hook
 │   ├── react-app-env.d.ts    # CRA ambient types
-│   ├── App.test.tsx          # Test file (currently minimal)
+│   ├── App.test.tsx          # Test file (currently minimal — see Testing section)
 │   ├── components/
 │   │   ├── Navbar.tsx
 │   │   ├── Hero.tsx
@@ -172,23 +186,50 @@ Each item has `name` (Hebrew), `description` (Hebrew), and `price` (ILS integer)
 
 ## Testing
 
-Testing infrastructure: Jest + React Testing Library.
+**Goal: high coverage.** Every component and hook should have a test file. Security-sensitive features (checkout, admin, auth) must have thorough tests.
 
+### Standards
 - Tests live alongside source in `src/` (`*.test.tsx`).
 - `setupTests.ts` imports `@testing-library/jest-dom` for extended matchers.
-- Current coverage is minimal; the existing `App.test.tsx` has a placeholder test.
-- When adding new components, add a corresponding test file.
+- When adding a new component, always add a corresponding `*.test.tsx` file.
+- When adding a hook, always add a corresponding `*.test.ts` file.
+- Use `@testing-library/user-event` for user interaction testing — do not use `fireEvent` directly.
+
+### Run tests
+```bash
+CI=true npm test          # single pass
+CI=true npm test --coverage  # with coverage report
+```
+
+### Known gap
+`App.test.tsx` currently contains a broken placeholder test (checks for "learn react" text that doesn't exist). Replace it with real smoke tests before shipping.
+
+---
+
+## Security Requirements
+
+This project will handle customer order data and an admin panel. The following areas require full security coverage:
+
+| Area | Requirement |
+|---|---|
+| **Payment / order data** | Never log or expose PII; validate all order inputs server-side |
+| **Admin panel** | Auth-gated; no route or API accessible without valid session |
+| **XSS / injection** | Sanitize all user inputs; never use `dangerouslySetInnerHTML` without escaping |
+| **API / backend endpoints** | Rate-limit order submission; validate all inputs at the API boundary |
+
+When implementing the backend (stack TBD), apply these security rules at every endpoint. When writing tests, include security-focused test cases: invalid inputs, unauthenticated requests, boundary values.
 
 ---
 
 ## Known Issues / Watchpoints
 
 1. **Duplicate menu JSON** — `menu_data/menu_items.json` and `public/menu_data/menu_items.json` must be kept in sync manually.
-2. **Cart not persisted** — cart resets on page refresh; no localStorage integration yet.
+2. **Cart not persisted** — cart resets on page refresh; `localStorage` integration is planned.
 3. **No error boundary** — `useMenu` does not handle fetch failures gracefully.
-4. **Placeholder test** — `App.test.tsx` checks for "learn react" text which does not exist in this app.
+4. **Broken placeholder test** — `App.test.tsx` checks for "learn react" text which does not exist in this app.
 5. **`App.css` is empty** — do not add styles there; use `index.css`.
 6. **`legacy/`** — the old vanilla JS site; treat as read-only reference.
+7. **No deployment pipeline yet** — no CI/CD, no hosting configured.
 
 ---
 
@@ -199,7 +240,8 @@ Testing infrastructure: Jest + React Testing Library.
 - **Maintain Hebrew** for all user-visible text.
 - **Maintain RTL** layout; test any layout changes in RTL context.
 - **Keep styles in `index.css`**; use the existing CSS variable tokens.
-- When adding a new component, place it in `src/components/` and export a named export.
+- When adding a new component, place it in `src/components/` and add a named export + a corresponding test file.
 - When adding new menu logic, extend `useMenu.ts` rather than scattering it in components.
 - TypeScript strict mode is on — all types must be explicit; avoid `any`.
 - The `legacy/` directory is archived — make no changes there.
+- Security-sensitive features (auth, checkout, admin) require test coverage before merging.
