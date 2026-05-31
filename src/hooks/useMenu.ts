@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MenuItem } from '../types';
+import { MenuItem, AdminOverride } from '../types';
 
 const CATEGORY_CONFIG: Record<string, { filter: MenuItem['category']; tagColor: string; accentColor: string; emoji: string }> = {
   'דוקטור פיצה': { filter: 'pizza',   tagColor: '#FF3B30', accentColor: '#FF9500', emoji: '🍕' },
@@ -34,33 +34,60 @@ interface RawMenu {
   }>;
 }
 
-export function useMenu() {
-  const [items, setItems] = useState<MenuItem[]>([]);
+const ADMIN_STORAGE_KEY = 'dr_pizza_admin_overrides';
+
+function loadOverrides(): Record<number, AdminOverride> {
+  try {
+    const raw = localStorage.getItem(ADMIN_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+export function useMenu(version = 0) {
+  const [allItems, setAllItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setLoading(true);
+    setError(null);
     fetch('/menu_data/menu_items.json')
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error('שגיאה בטעינת התפריט');
+        return r.json();
+      })
       .then((data: RawMenu) => {
+        const overrides = loadOverrides();
         let id = 0;
         const mapped = data.menu.flatMap(cat => {
           const cfg = CATEGORY_CONFIG[cat.category] ?? CATEGORY_CONFIG['שתייה'];
-          return cat.items.map(item => ({
-            id:          ++id,
-            name:        item.item_name,
-            category:    cfg.filter,
-            emoji:       resolveEmoji(item.item_name, cfg.emoji),
-            price:       item.item_price,
-            desc:        item.item_description ?? '',
-            tagLabel:    resolveTag(item.item_name, cfg.filter),
-            tagColor:    cfg.tagColor,
-            accentColor: cfg.accentColor,
-          }));
+          return cat.items.map(item => {
+            const itemId = ++id;
+            const ov = overrides[itemId] ?? {};
+            return {
+              id:          itemId,
+              name:        item.item_name,
+              category:    cfg.filter,
+              emoji:       resolveEmoji(item.item_name, cfg.emoji),
+              price:       ov.price ?? item.item_price,
+              desc:        item.item_description ?? '',
+              tagLabel:    resolveTag(item.item_name, cfg.filter),
+              tagColor:    cfg.tagColor,
+              accentColor: cfg.accentColor,
+              hidden:      ov.hidden ?? false,
+            };
+          });
         });
-        setItems(mapped);
+        setAllItems(mapped);
+        setLoading(false);
+      })
+      .catch((err: Error) => {
+        setError(err.message ?? 'שגיאה לא ידועה');
         setLoading(false);
       });
-  }, []);
+  }, [version]);
 
-  return { items, loading };
+  return { items: allItems.filter(i => !i.hidden), allItems, loading, error };
 }

@@ -8,6 +8,7 @@ export interface MenuItem {
   tagLabel: string;
   tagColor: string;
   accentColor: string;
+  hidden?: boolean;
 }
 
 export interface CartItem extends MenuItem {
@@ -15,3 +16,14 @@ export interface CartItem extends MenuItem {
 }
 
 export type FilterCategory = 'all' | 'pizza' | 'special' | 'dessert' | 'drink';
+
+export interface ToastMessage {
+  id: number;
+  text: string;
+  emoji: string;
+}
+
+export interface AdminOverride {
+  price?: number;
+  hidden?: boolean;
+}
