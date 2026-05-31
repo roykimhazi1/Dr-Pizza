@@ -1,54 +1,72 @@
 import React, { useState, useCallback } from 'react';
-import { MenuItem, CartItem } from './types';
+import { MenuItem, ToastMessage } from './types';
 import { useMenu } from './hooks/useMenu';
+import { useCart } from './hooks/useCart';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import StatsBanner from './components/StatsBanner';
 import MenuSection from './components/MenuSection';
 import HowToOrder from './components/HowToOrder';
+import AboutSection from './components/AboutSection';
 import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 import CartSidebar from './components/CartSidebar';
 import OrderModal from './components/OrderModal';
+import Toast from './components/Toast';
+import AdminPanel from './components/AdminPanel';
+
+let nextToastId = 0;
 
 export default function App() {
-  const { items, loading } = useMenu();
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [menuVersion, setMenuVersion] = useState(0);
+  const { items, allItems, loading, error } = useMenu(menuVersion);
+  const { cart, addToCart: addItem, changeQty, clearCart, cartCount, cartTotal } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [adminOpen, setAdminOpen] = useState(false);
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   const addToCart = useCallback((item: MenuItem) => {
-    setCart(prev => {
-      const existing = prev.find(i => i.id === item.id);
-      if (existing) return prev.map(i => i.id === item.id ? { ...i, qty: i.qty + 1 } : i);
-      return [...prev, { ...item, qty: 1 }];
-    });
+    addItem(item);
     setCartOpen(true);
+    const id = ++nextToastId;
+    setToasts(prev => [...prev, { id, text: `${item.name} נוסף לסל`, emoji: item.emoji }]);
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 2500);
+  }, [addItem]);
+
+  const dismissToast = useCallback((id: number) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
   }, []);
 
-  const changeQty = useCallback((id: number, delta: number) => {
-    setCart(prev =>
-      prev
-        .map(i => i.id === id ? { ...i, qty: i.qty + delta } : i)
-        .filter(i => i.qty > 0)
+  const handleOrderConfirm = useCallback(() => {
+    clearCart();
+  }, [clearCart]);
+
+  if (adminOpen) {
+    return (
+      <AdminPanel
+        allItems={allItems}
+        onExit={() => setAdminOpen(false)}
+        onSave={() => {
+          setMenuVersion(v => v + 1);
+          setAdminOpen(false);
+        }}
+      />
     );
-  }, []);
-
-  const placeOrder = useCallback(() => {
-    setCartOpen(false);
-    setCart([]);
-    setModalOpen(true);
-  }, []);
-
-  const cartCount = cart.reduce((s, i) => s + i.qty, 0);
+  }
 
   return (
     <div>
-      <Navbar cartCount={cartCount} onCartOpen={() => setCartOpen(true)} />
+      <Navbar
+        cartCount={cartCount}
+        onCartOpen={() => setCartOpen(true)}
+        onAdminOpen={() => setAdminOpen(true)}
+      />
       <Hero />
       <StatsBanner />
-      <MenuSection items={items} loading={loading} onAdd={addToCart} />
+      <MenuSection items={items} loading={loading} error={error} onAdd={addToCart} />
       <HowToOrder />
+      <AboutSection />
       <Testimonials />
       <Footer />
       <CartSidebar
@@ -56,9 +74,16 @@ export default function App() {
         cart={cart}
         onClose={() => setCartOpen(false)}
         onChangeQty={changeQty}
-        onCheckout={placeOrder}
+        onCheckout={() => { setCartOpen(false); setModalOpen(true); }}
       />
-      <OrderModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <OrderModal
+        open={modalOpen}
+        cart={cart}
+        total={cartTotal}
+        onClose={() => setModalOpen(false)}
+        onConfirm={handleOrderConfirm}
+      />
+      <Toast toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 }

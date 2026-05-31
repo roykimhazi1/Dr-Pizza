@@ -4,7 +4,7 @@ export default function HowToOrder() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const els = ref.current?.querySelectorAll<HTMLElement>('.step, .stat');
+    const els = ref.current?.querySelectorAll<HTMLElement>('.step');
     if (!els) return;
     const observer = new IntersectionObserver(entries => {
       entries.forEach(e => {
@@ -27,25 +27,25 @@ export default function HowToOrder() {
     <section className="how-section" id="how" ref={ref}>
       <div className="section-header">
         <h2>איך <span className="highlight">מזמינים</span></h2>
-        <p>האתר כרגע הוא דף תדמית ודמו להזמנה. להזמנה אמיתית מתקשרים לעסק.</p>
+        <p>שלושה צעדים פשוטים לפיצה חמה בבית.</p>
       </div>
       <div className="steps">
         <div className="step">
           <div className="step-icon" style={{ background: '#FFE0E0' }}>📋</div>
           <h3>1. בוחרים מהתפריט</h3>
-          <p>עוברים על הפיצות, המבצעים, המאפים והקינוחים.</p>
+          <p>עוברים על הפיצות, המבצעים, המאפים והקינוחים — יש הרבה ממה לבחור.</p>
         </div>
         <div className="step-arrow">←</div>
         <div className="step">
           <div className="step-icon" style={{ background: '#E0F5FF' }}>🛒</div>
           <h3>2. מוסיפים לסל</h3>
-          <p>הסל עוזר לראות דוגמה להזמנה ולסכום משוער.</p>
+          <p>בחרו כמויות, ראו את הסכום הכולל ועדכנו את הסל בקלות.</p>
         </div>
         <div className="step-arrow">←</div>
         <div className="step">
-          <div className="step-icon" style={{ background: '#E8FFE0' }}>☎️</div>
-          <h3>3. מתקשרים להזמנה</h3>
-          <p>להזמנה, איסוף עצמי או בירור משלוחים: 03-9587775.</p>
+          <div className="step-icon" style={{ background: '#E8FFE0' }}>📝</div>
+          <h3>3. שולחים הזמנה</h3>
+          <p>ממלאים שם וטלפון — אנו נאשר את ההזמנה בהקדם ונתאם משלוח.</p>
         </div>
       </div>
     </section>

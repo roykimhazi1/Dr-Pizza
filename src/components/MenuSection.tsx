@@ -5,6 +5,7 @@ import MenuCard from './MenuCard';
 interface Props {
   items: MenuItem[];
   loading: boolean;
+  error: string | null;
   onAdd: (item: MenuItem) => void;
 }
 
@@ -16,33 +17,58 @@ const TABS: { label: string; value: FilterCategory }[] = [
   { label: 'שתייה',   value: 'drink'   },
 ];
 
-export default function MenuSection({ items, loading, onAdd }: Props) {
+export default function MenuSection({ items, loading, error, onAdd }: Props) {
   const [filter, setFilter] = useState<FilterCategory>('all');
+  const [search, setSearch] = useState('');
 
-  const visible = filter === 'all' ? items : items.filter(i => i.category === filter);
+  const visible = items.filter(item => {
+    const matchesFilter = filter === 'all' || item.category === filter;
+    const matchesSearch = !search.trim() ||
+      item.name.includes(search) ||
+      item.desc.includes(search);
+    return matchesFilter && matchesSearch;
+  });
 
   return (
     <section className="menu-section" id="menu">
       <div className="section-header">
         <h2>התפריט של <span className="highlight">ד"ר פיצה</span></h2>
-        <p>בחרו פיצה, מאפה, קינוח או שתייה והוסיפו לסל לדוגמה.</p>
+        <p>בחרו פיצה, מאפה, קינוח או שתייה והוסיפו לסל.</p>
       </div>
 
-      <div className="filter-tabs">
-        {TABS.map(tab => (
-          <button
-            key={tab.value}
-            className={`tab${filter === tab.value ? ' active' : ''}`}
-            onClick={() => setFilter(tab.value)}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="menu-controls">
+        <div className="filter-tabs">
+          {TABS.map(tab => (
+            <button
+              key={tab.value}
+              className={`tab${filter === tab.value ? ' active' : ''}`}
+              onClick={() => setFilter(tab.value)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        <div className="search-wrap">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="🔍 חיפוש בתפריט..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          {search && (
+            <button className="search-clear" onClick={() => setSearch('')} aria-label="נקה חיפוש">✕</button>
+          )}
+        </div>
       </div>
 
       <div className="menu-grid" id="menuGrid">
         {loading ? (
-          <p style={{ textAlign: 'center', gridColumn: '1/-1', padding: '2rem', color: '#888' }}>טוען תפריט...</p>
+          <p className="menu-status">⏳ טוען תפריט...</p>
+        ) : error ? (
+          <p className="menu-status menu-error">⚠️ {error}</p>
+        ) : visible.length === 0 ? (
+          <p className="menu-status">לא נמצאו פריטים תואמים לחיפוש.</p>
         ) : (
           visible.map((item, i) => (
             <MenuCard key={item.id} item={item} index={i} onAdd={onAdd} />
